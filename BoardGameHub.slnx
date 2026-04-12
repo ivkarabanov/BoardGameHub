@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BoardGameHub.API/BoardGameHub.API.csproj" />
+  <Project Path="BoardGameHub.Application/BoardGameHub.Application.csproj" />
+  <Project Path="BoardGameHub.Domain/BoardGameHub.Domain.csproj" />
+  <Project Path="BoardGameHub.Infrastructure/BoardGameHub.Infrastructure.csproj" />
+</Solution>

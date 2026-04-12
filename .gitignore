@@ -1,0 +1,4 @@
+/.vs
+/BoardGameHub.API/*.user
+**/bin
+**/obj

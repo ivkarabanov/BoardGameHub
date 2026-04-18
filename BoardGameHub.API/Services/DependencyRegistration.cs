@@ -1,10 +1,8 @@
-﻿using BoardGameHub.API.DTO;
-using BoardGameHub.API.Mappers;
+﻿using BoardGameHub.API.Mappers;
 using BoardGameHub.Application;
 using BoardGameHub.Application.Abstractions;
-using BoardGameHub.Domain;
+using BoardGameHub.Application.Mappers;
 using BoardGameHub.Infrastructure;
-using BoardGameHub.Infrastructure.Abstractions;
 
 namespace BoardGameHub.API.Services
 {
@@ -33,6 +31,10 @@ namespace BoardGameHub.API.Services
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<IBoardGameService, BoardGameService>();
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.AddMaps(typeof(ApplicationModelsProfile));
+            });
             return services;
         }
     }

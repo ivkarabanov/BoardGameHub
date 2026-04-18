@@ -1,3 +1,4 @@
+using BoardGameHub.API.Exceptions;
 using BoardGameHub.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,7 +20,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseExceptionHandler();
+app.UseExceptionHandlerMiddleware();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

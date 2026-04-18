@@ -1,8 +1,5 @@
 ﻿using BoardGameHub.Domain.Exceptions;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Net;
-using System.Text.Json.Serialization;
 
 namespace BoardGameHub.API.Exceptions
 {
@@ -31,17 +28,9 @@ namespace BoardGameHub.API.Exceptions
 
         private Task HandleExceptionMessageAsync(HttpContext context, Exception exception)
         {
-            int statusCode;
+            int statusCode = GetStatusCode(exception);
             _logger.LogError(exception, exception.Message);
-            if (exception is DomainException domainException)
-            {
-                statusCode = (int)HttpStatusCode.BadRequest;
-            }
-            else
-            {
-                statusCode = (int)HttpStatusCode.InternalServerError;
-            }
-             
+                                    
             var result = JsonConvert.SerializeObject(new
             {
                 StatusCode = statusCode,
@@ -50,6 +39,19 @@ namespace BoardGameHub.API.Exceptions
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
             return context.Response.WriteAsync(result);
+        }
+
+        private int GetStatusCode(Exception exception)
+        {
+            return exception switch
+            {
+                ArgumentOutOfRangeException => StatusCodes.Status400BadRequest,
+                ArgumentException => StatusCodes.Status400BadRequest,
+                GameAlreadyExistsException => StatusCodes.Status409Conflict,
+                GameNotFoundException => StatusCodes.Status404NotFound,
+                DomainException => StatusCodes.Status404NotFound,
+                _ => StatusCodes.Status500InternalServerError
+            };
         }
     }
 }

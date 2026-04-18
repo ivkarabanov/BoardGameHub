@@ -1,17 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace BoardGameHub.API.DTO
+﻿namespace BoardGameHub.Application.Models
 {
-    public class CreateBoardGameRequest
+    public class CreateBoardGameModel
     {
-        [Required]
         public required string Title { get; init; }
-
-        [Range(1, 5000)]
         public int DurationMinutes { get; init; }
-        [Range(1, 100)]
         public int? MinPlayersCount { get; init; }
-        [Range(1, 100)]
         public int? MaxPlayersCount { get; init; }
     }
 }

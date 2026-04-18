@@ -1,8 +1,5 @@
-﻿using BoardGameHub.Domain;
-using BoardGameHub.Infrastructure.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using BoardGameHub.Application.Models;
+using BoardGameHub.Domain;
 
 namespace BoardGameHub.Application.Abstractions
 {
@@ -10,6 +7,8 @@ namespace BoardGameHub.Application.Abstractions
     {
         Task<List<BoardGame>> ListAsync();
 
-        Task<BoardGame> AddAsync(BoardGame boardGame);
+        Task<BoardGame> CreateAsync(CreateBoardGameModel boardGameModel);
+
+        Task<BoardGame> GetAsync(int id);
     }
 }

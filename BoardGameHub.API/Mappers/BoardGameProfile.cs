@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BoardGameHub.API.DTO;
+using BoardGameHub.Application.Models;
 using BoardGameHub.Domain;
 
 namespace BoardGameHub.API.Mappers
@@ -8,9 +9,8 @@ namespace BoardGameHub.API.Mappers
     {
         public BoardGameProfile()
         {
-            CreateMap<CreateBoardGameRequest, BoardGame>()
-               .ConstructUsing(x => new BoardGame(0, x.Title, x.DurationMinutes, x.MinPlayersCount, x.MaxPlayersCount));
             CreateMap<BoardGame, BoardGameResponse>();
+            CreateMap<CreateBoardGameRequest, CreateBoardGameModel>();
         }
     }
 }

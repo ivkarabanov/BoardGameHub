@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using BoardGameHub.API.DTO;
-using BoardGameHub.API.Filters;
 using BoardGameHub.Application.Abstractions;
-using BoardGameHub.Domain;
 using Microsoft.AspNetCore.Mvc;
+using BoardGameHub.Application.Models;
 
 namespace BoardGameHub.API.Controllers
 {
@@ -23,6 +22,7 @@ namespace BoardGameHub.API.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(BoardGameResponse),StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Create(CreateBoardGameRequest boardGameRequest)
         {
@@ -31,11 +31,11 @@ namespace BoardGameHub.API.Controllers
                 return BadRequest();
             }
 
-            var boardGame = _mapper.Map<BoardGame>(boardGameRequest);
-            var createdGame = await _boardGameService.AddAsync(boardGame);
+            var boardGame = _mapper.Map<CreateBoardGameModel>(boardGameRequest);
+            var createdGame = await _boardGameService.CreateAsync(boardGame);
             var createdGameResponse = _mapper.Map<BoardGameResponse>(createdGame);
 
-            return CreatedAtAction(nameof(Create), new { id = createdGame.Id }, createdGameResponse);
+            return CreatedAtAction(nameof(Get), new { id = createdGame.Id }, createdGameResponse);
         }
 
         [HttpGet]
@@ -47,6 +47,18 @@ namespace BoardGameHub.API.Controllers
             var gamesDto = _mapper.Map<List<BoardGameResponse>>(games);
             var responseDto = new BoardGameListResponse() { BoardGames = gamesDto }    ;
             return Ok(responseDto);
+        }
+
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Get(int id)
+        {
+            var game = await _boardGameService.GetAsync(id);
+            var gameDto = _mapper.Map<BoardGameResponse>(game);
+            return Ok(gameDto);
         }
     }
 }

@@ -1,6 +1,8 @@
 <Solution>
   <Project Path="BoardGameHub.API/BoardGameHub.API.csproj" />
+  <Project Path="BoardGameHub.Application.Tests/BoardGameHub.Application.Tests.csproj" Id="bd93cdc7-5c22-4a40-8507-98b3cd5d6685" />
   <Project Path="BoardGameHub.Application/BoardGameHub.Application.csproj" />
+  <Project Path="BoardGameHub.Domain.Tests/BoardGameHub.Domain.Tests.csproj" Id="45e4857d-5f66-41ec-814b-8853f5b189c2" />
   <Project Path="BoardGameHub.Domain/BoardGameHub.Domain.csproj" />
   <Project Path="BoardGameHub.Infrastructure/BoardGameHub.Infrastructure.csproj" />
 </Solution>

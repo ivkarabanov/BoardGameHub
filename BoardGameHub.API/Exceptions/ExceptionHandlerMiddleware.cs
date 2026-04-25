@@ -1,5 +1,5 @@
 ﻿using BoardGameHub.Domain.Exceptions;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace BoardGameHub.API.Exceptions
 {
@@ -31,7 +31,7 @@ namespace BoardGameHub.API.Exceptions
             int statusCode = GetStatusCode(exception);
             _logger.LogError(exception, exception.Message);
                                     
-            var result = JsonConvert.SerializeObject(new
+            var result = JsonSerializer.Serialize(new
             {
                 StatusCode = statusCode,
                 ErrorMessage = exception.Message

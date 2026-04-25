@@ -1,39 +1,30 @@
-﻿using BoardGameHub.Domain.Exceptions;
+﻿using BoardGameHub.Domain.ValueObjects;
 
 namespace BoardGameHub.Domain
 {
     public class BoardGame
     {
-        public BoardGame(string title, int durationMinutes,
-            int? minPlayersCount = null, int? maxPlayersCount = null)
+        public BoardGame(BoardGameTitle title, Duration duration, PlayerCountRange playersCountRange)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(title);
-            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(durationMinutes, 0, nameof(durationMinutes));
-            if (MinPlayersCount.HasValue && MaxPlayersCount.HasValue && MinPlayersCount > MaxPlayersCount)
-                throw new IncorrectPlayersCountException("Минимальное число игроков больше, чем максимальное число игроков");
-
             Title = title;
-            DurationMinutes = durationMinutes;
-            MinPlayersCount = minPlayersCount;
-            MaxPlayersCount = maxPlayersCount;
+            Duration = duration;
+            PlayerCountRange = playersCountRange;
         }
 
-        public BoardGame(int id, string title, int durationMinutes,
-            int? minPlayersCount = null, int? maxPlayersCount = null)
-            :this(title, durationMinutes, minPlayersCount, maxPlayersCount) 
+        public BoardGame(int id, BoardGameTitle title, Duration duration,
+            PlayerCountRange playerCountRange)
+            :this(title, duration, playerCountRange) 
         {
             Id = id;
         }
 
         public int Id { get; private set; }
 
-        public string Title { get;  }
+        public BoardGameTitle Title { get;  }
 
-        public int DurationMinutes { get; }
+        public Duration Duration { get; }
 
-        public int? MinPlayersCount { get; }
-
-        public int? MaxPlayersCount { get;  }
+        public PlayerCountRange PlayerCountRange { get; }
 
         internal BoardGame AssignId(int id)
         {

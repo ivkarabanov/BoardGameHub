@@ -1,19 +1,17 @@
-﻿using AutoMapper;
-using BoardGameHub.Application.Abstractions;
+﻿using BoardGameHub.Application.Abstractions;
 using BoardGameHub.Application.Models;
 using BoardGameHub.Domain;
+using BoardGameHub.Domain.ValueObjects;
 
 namespace BoardGameHub.Application
 {
     public sealed class BoardGameService : IBoardGameService
     {
         private readonly IBoardGameRepository _boardGameRepository;
-        private readonly IMapper _mapper;
 
-        public BoardGameService(IBoardGameRepository boardGameRepository, IMapper mapper)
+        public BoardGameService(IBoardGameRepository boardGameRepository)
         {
             _boardGameRepository = boardGameRepository;
-            _mapper = mapper;
         }
 
         public async Task<List<BoardGame>> ListAsync()
@@ -23,7 +21,12 @@ namespace BoardGameHub.Application
 
         public async Task<BoardGame> CreateAsync(CreateBoardGameModel boardGameModel)
         {
-            var boardGame = _mapper.Map<BoardGame>(boardGameModel);
+            var title = new BoardGameTitle(boardGameModel.Title);
+            var duration = new Duration(boardGameModel.DurationMinutes);
+            var playerCountRange = new PlayerCountRange(boardGameModel.MinPlayersCount, boardGameModel.MaxPlayersCount);
+
+            var boardGame = new BoardGame(title, duration, playerCountRange);
+
             return await _boardGameRepository.AddAsync(boardGame);
         }
 

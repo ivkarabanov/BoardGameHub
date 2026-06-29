@@ -1,4 +1,4 @@
-﻿using BoardGameHub.Domain;
+﻿using BoardGameHub.Domain.Entitites;
 
 namespace BoardGameHub.Application.Abstractions
 {

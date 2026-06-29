@@ -1,6 +1,7 @@
 ﻿using BoardGameHub.API.Mappers;
-using BoardGameHub.Application;
 using BoardGameHub.Application.Abstractions;
+using BoardGameHub.Application.Factories;
+using BoardGameHub.Application.Services;
 using BoardGameHub.Infrastructure;
 
 namespace BoardGameHub.API.Services
@@ -24,12 +25,16 @@ namespace BoardGameHub.API.Services
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<IBoardGameRepository, InMemoryBoardGameRepository>();
+            services.AddScoped<IGameSessionRepository, InMemoryGameSessionRepository>();
             return services;
         }
 
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<IBoardGameService, BoardGameService>();
+            services.AddScoped<IGameSessionService, GameSessionService>();
+            services.AddScoped<IGameSessionResponseFactory, GameSessionResponseFactory>();
+            services.AddScoped<IDateTimeProvider, DateTimeProvider>();
             return services;
         }
     }

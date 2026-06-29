@@ -1,17 +1,12 @@
 ﻿using BoardGameHub.Application.Abstractions;
 using BoardGameHub.Application.Models;
-using BoardGameHub.Domain;
+using BoardGameHub.Domain.Entitites;
 using Moq;
 
 namespace BoardGameHub.Application.Tests
 {
-    public class Tests
+    public class BoardGameServiceTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
         [Test]
         public async Task CreateAsync_PassModel_CreateDomainBoardGame()
         {

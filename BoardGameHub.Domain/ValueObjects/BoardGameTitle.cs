@@ -19,7 +19,7 @@ namespace BoardGameHub.Domain.ValueObjects
 
         public override bool Equals([NotNullWhen(true)] object? obj)
         {
-            return base.Equals(obj);
+            return obj is BoardGameTitle boardGameTitle && Equals(boardGameTitle);
         }
 
         public override string ToString()

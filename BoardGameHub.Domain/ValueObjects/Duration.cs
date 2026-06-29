@@ -21,7 +21,12 @@ namespace BoardGameHub.Domain.ValueObjects
 
         public override bool Equals([NotNullWhen(true)] object? obj)
         {
-            return base.Equals(obj);
+            if(obj == null || obj is not Duration duration)
+            {
+                return false;
+            }
+
+            return Equals(duration);
         }
 
         public static bool operator ==(Duration left, Duration right)

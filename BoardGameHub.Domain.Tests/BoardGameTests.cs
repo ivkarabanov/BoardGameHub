@@ -5,7 +5,7 @@ namespace BoardGameHub.Domain.Tests
     public class BoardGameTests
     {
         [Test]
-        public void Ctor_ValidValues_ShoulCreateObject()
+        public void Ctor_ValidValues_ShouldCreateObject()
         {
             var duration = new Duration(90);
             var boardGameTitle = new BoardGameTitle("Манчкин");
@@ -21,7 +21,7 @@ namespace BoardGameHub.Domain.Tests
         }
 
         [Test]
-        public void CtorWithId_ValidValues_ShoulCreateObject()
+        public void CtorWithId_ValidValues_ShouldCreateObject()
         {
             var duration = new Duration(90);
             var boardGameTitle = new BoardGameTitle("Манчкин");

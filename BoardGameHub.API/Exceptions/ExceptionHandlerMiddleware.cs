@@ -1,4 +1,5 @@
-﻿using BoardGameHub.Domain.Exceptions;
+﻿using BoardGameHub.Application.Exceptions;
+using BoardGameHub.Domain.Exceptions;
 using System.Text.Json;
 
 namespace BoardGameHub.API.Exceptions
@@ -49,7 +50,9 @@ namespace BoardGameHub.API.Exceptions
                 ArgumentException => StatusCodes.Status400BadRequest,
                 GameAlreadyExistsException => StatusCodes.Status409Conflict,
                 GameNotFoundException => StatusCodes.Status404NotFound,
-                DomainException => StatusCodes.Status404NotFound,
+                GameSessionNotFoundException => StatusCodes.Status400BadRequest,
+                UseCaseException => StatusCodes.Status400BadRequest,
+                DomainException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError
             };
         }

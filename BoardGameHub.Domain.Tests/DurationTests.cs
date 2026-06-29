@@ -2,7 +2,7 @@
 
 namespace BoardGameHub.Domain.Tests
 {
-    internal class DurationTests
+    public class DurationTests
     {
         [Test]
         [TestCase(0)]
@@ -19,6 +19,28 @@ namespace BoardGameHub.Domain.Tests
             var duration = new Duration(minutes);
 
             Assert.That(duration.Minutes, Is.EqualTo(minutes));
+        }
+
+        [Test]
+        public void Equals_DifferentDurations_ShouldReturnFalse()
+        {
+            var duration1 = new Duration(10);
+            var duration2 = new Duration(11);
+
+            var result = duration1 == duration2;
+
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void Equals_SameDurations_ShouldReturnTrue()
+        {
+            var duration1 = new Duration(15);
+            var duration2 = new Duration(15);
+
+            var result = duration1 == duration2;
+
+            Assert.That(result, Is.True);
         }
     }
 }

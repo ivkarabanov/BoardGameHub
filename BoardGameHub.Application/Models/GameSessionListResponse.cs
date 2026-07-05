@@ -1,4 +1,4 @@
-﻿namespace BoardGameHub.Application.Models.DTO
+﻿namespace BoardGameHub.Application.Models
 {
     public class GameSessionListResponse
     {

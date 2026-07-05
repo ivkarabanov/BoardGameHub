@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BoardGameHub.Application.Abstractions;
 using BoardGameHub.Application.Models;
-using BoardGameHub.Application.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoardGameHub.API.Controllers
@@ -45,7 +44,7 @@ namespace BoardGameHub.API.Controllers
         [ProducesResponseType(typeof(GameSessionResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Create(CreateGameSessionModel sessionRequest)
+        public async Task<IActionResult> Create(CreateGameSessionRequest sessionRequest)
         {
             if (sessionRequest == null)
             {

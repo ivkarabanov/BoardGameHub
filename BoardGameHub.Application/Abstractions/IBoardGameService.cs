@@ -1,14 +1,14 @@
-﻿using BoardGameHub.Application.Models;
-using BoardGameHub.Domain.Entitites;
+﻿using BoardGameHub.API.DTO;
+using BoardGameHub.Application.Models;
 
 namespace BoardGameHub.Application.Abstractions
 {
     public interface IBoardGameService
     {
-        Task<List<BoardGame>> ListAsync();
+        Task<BoardGameListResponse> ListAsync();
 
-        Task<BoardGame> CreateAsync(CreateBoardGameModel boardGameModel);
+        Task<BoardGameResponse> CreateAsync(CreateBoardGameRequest boardGameModel);
 
-        Task<BoardGame> GetAsync(int id);
+        Task<BoardGameResponse> GetAsync(int id);
     }
 }

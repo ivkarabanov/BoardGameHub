@@ -1,26 +1,23 @@
 ﻿using BoardGameHub.Domain.Enums;
 using BoardGameHub.Domain.Exceptions;
+using BoardGameHub.Domain.ValueObjects;
 
 namespace BoardGameHub.Domain.Entitites
 {
     public class GameSession
     {
-        public GameSession(int id, int boardGameId, string name, DateTime scheduledAt, GameSessionStatus status)
+        public GameSession(int id, BoardGameId boardGameId, GameSessionName name, GameSessionSceduledAt scheduledAt, GameSessionStatus status)
             :this(boardGameId, name, scheduledAt, status)
         {
             if (id <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(id), "Идентификатор сессии должен быть больше 0");
             }
-            if (scheduledAt == default)
-            {
-                throw new ArgumentOutOfRangeException(nameof(id), "Неверные дата/время игровой сессии");
-            }
 
             Id = id;
         }
 
-        private GameSession(int boardGameId, string name, DateTime scheduledAt, GameSessionStatus status)
+        private GameSession(BoardGameId boardGameId, GameSessionName name, GameSessionSceduledAt scheduledAt, GameSessionStatus status)
         {
             BoardGameId = boardGameId;
             Name = name;
@@ -35,13 +32,13 @@ namespace BoardGameHub.Domain.Entitites
 
         public int Id { get; private set; }
         
-        public int BoardGameId { get; private set; }
+        public BoardGameId BoardGameId { get; private set; }
 
-        public string Name {  get; private set; }
+        public GameSessionName Name {  get; private set; }
 
-        public DateTime ScheduledAt { get; private set; }
+        public GameSessionSceduledAt ScheduledAt { get; private set; }
 
-        public GameSessionStatus Status { get; private set; }
+        public GameSessionStatus Status { get; private set; } = GameSessionStatus.Planed;
 
 
         public void Start()
@@ -84,7 +81,7 @@ namespace BoardGameHub.Domain.Entitites
             Status = GameSessionStatus.Cancelled;
         }
 
-        public static GameSession CreateNew(int boardGameId, string name, DateTime scheduledAt)
+        public static GameSession CreateNew(BoardGameId boardGameId, GameSessionName name, GameSessionSceduledAt scheduledAt)
         {
             return new GameSession(boardGameId, name, scheduledAt, GameSessionStatus.Planed);
         }

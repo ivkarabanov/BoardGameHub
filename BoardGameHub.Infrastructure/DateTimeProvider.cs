@@ -6,12 +6,12 @@ namespace BoardGameHub.Infrastructure
     {
         public DateTime GetNow()
         {
-            throw new NotImplementedException();
+            return DateTime.Now;
         }
 
         public DateOnly GetToday()
         {
-            throw new NotImplementedException();
+            return DateOnly.FromDateTime(DateTime.Today);
         }
     }
 }

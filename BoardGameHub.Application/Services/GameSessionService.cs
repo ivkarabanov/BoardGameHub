@@ -1,9 +1,9 @@
 ﻿using BoardGameHub.Application.Abstractions;
 using BoardGameHub.Application.Exceptions;
 using BoardGameHub.Application.Models;
-using BoardGameHub.Application.Models.DTO;
 using BoardGameHub.Domain.Entitites;
 using BoardGameHub.Domain.Exceptions;
+using BoardGameHub.Domain.ValueObjects;
 
 namespace BoardGameHub.Application.Services
 {
@@ -12,30 +12,43 @@ namespace BoardGameHub.Application.Services
         private readonly IGameSessionRepository _sessionRepository;
         private readonly IBoardGameRepository _boardGameRepository;
         private readonly IGameSessionResponseFactory _responseFactory;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         public GameSessionService(IGameSessionRepository sessionRepository,
             IBoardGameRepository boardGameRepository,
-            IGameSessionResponseFactory responseFactory)
+            IGameSessionResponseFactory responseFactory,
+            IDateTimeProvider dateTimeProvider)
         {
             _sessionRepository = sessionRepository;
             _boardGameRepository = boardGameRepository;
             _responseFactory = responseFactory;
+            _dateTimeProvider = dateTimeProvider;
         }
 
-        public async Task<GameSessionResponse> CreateAsync(CreateGameSessionModel gameSessionModel)
+        public async Task<GameSessionResponse> CreateAsync(CreateGameSessionRequest gameSessionModel)
         {
+            var now = _dateTimeProvider.GetNow();
+            if (gameSessionModel.ScheduledAt <= now)
+            {
+                throw new ArgumentOutOfRangeException(nameof(gameSessionModel.ScheduledAt),
+                    "Не удалось создать игровую сессию, дата и время сессии должны быть в будущем");
+            }
+
             var boardGame = await _boardGameRepository.GetAsync(gameSessionModel.BoardGameId);
 
             if (boardGame == null)
             { 
-                    throw new GameNotFoundException($"Не удалось создать игровую сессию, так как не найдена настольная игра" +
-                        $" (id: {gameSessionModel.BoardGameId}) для игровой сессии: {gameSessionModel.Name}");
+                throw new GameNotFoundException($"Не удалось создать игровую сессию, так как не найдена настольная игра" +
+                    $" (id: {gameSessionModel.BoardGameId}) для игровой сессии: {gameSessionModel.Name}");
             }
 
+            var boardGameId = new BoardGameId(gameSessionModel.BoardGameId);
+            var gameSessionName = new GameSessionName(gameSessionModel.Name);
+            var scheduledAt = new GameSessionSceduledAt(gameSessionModel.ScheduledAt);
             var notStoredSessionWithouId = GameSession.CreateNew(
-                gameSessionModel.BoardGameId,
-                gameSessionModel.Name,
-                gameSessionModel.ScheduledAt);
+                boardGameId,
+                gameSessionName,
+                scheduledAt);
 
             var storedSession = await _sessionRepository.AddAsync(notStoredSessionWithouId);
             var storedSessionGame = await _boardGameRepository.GetAsync(storedSession.Id);
@@ -57,14 +70,14 @@ namespace BoardGameHub.Application.Services
             if (session == null)
                 throw new GameSessionNotFoundException($"Не удалось найти игровую сессию по идентификатору: {id}");
 
-            var boardGame = await _boardGameRepository.GetAsync(session.BoardGameId);
+            var boardGame = await _boardGameRepository.GetAsync(session.BoardGameId.Value);
             if(boardGame == null)
             {
-                throw new GameNotFoundException($"Не удалось найти настольную игру (id: {session.BoardGameId}) " +
+                throw new GameNotFoundException($"Не удалось найти настольную игру (id: {session.BoardGameId.Value}) " +
                     $"для игровой сессии: {session.Id} - {session.Name}");
             }
 
-            var response = _responseFactory.Create(session, boardGame);
+            GameSessionResponse response = _responseFactory.Create(session, boardGame);
 
             return response;
         }
@@ -80,12 +93,12 @@ namespace BoardGameHub.Application.Services
             var sessionResponses = new List<GameSessionResponse>();
             foreach (var session in sessions) 
             {
-                var boardGame = games.FirstOrDefault(x => x.Id == session.BoardGameId);
+                var boardGame = games.FirstOrDefault(x => x.Id == session.BoardGameId.Value);
 
                 if(boardGame == null)
                 {
                     throw new GameNotFoundException($"Не удалось найти настольную игру (id: {session.BoardGameId}) " +
-                        $"для игровой сессии: {session.Id} - {session.Name}");
+                        $"для игровой сессии: {session.Id} - {session.Name.Value}");
                 }
 
                 var sessionResponse = _responseFactory.Create(session, boardGame);

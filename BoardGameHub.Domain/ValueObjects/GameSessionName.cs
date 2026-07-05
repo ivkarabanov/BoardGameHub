@@ -1,8 +1,8 @@
 ﻿namespace BoardGameHub.Domain.ValueObjects
 {
-    public record BoardGameTitle
+    public record GameSessionName
     {
-        public BoardGameTitle(string title)
+        public GameSessionName(string title)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(title);
             Value = title;

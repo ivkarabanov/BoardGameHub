@@ -1,6 +1,8 @@
-﻿using BoardGameHub.Application.Abstractions;
-using BoardGameHub.Application.Models;
+﻿using AutoMapper;
+using BoardGameHub.API.DTO;
+using BoardGameHub.Application.Abstractions;
 using BoardGameHub.Domain.Entitites;
+using BoardGameHub.Domain.Exceptions;
 using BoardGameHub.Domain.ValueObjects;
 
 namespace BoardGameHub.Application.Services
@@ -8,18 +10,23 @@ namespace BoardGameHub.Application.Services
     public sealed class BoardGameService : IBoardGameService
     {
         private readonly IBoardGameRepository _boardGameRepository;
+        private readonly IMapper _mapper;
 
-        public BoardGameService(IBoardGameRepository boardGameRepository)
+        public BoardGameService(IBoardGameRepository boardGameRepository,
+            IMapper mapper)
         {
             _boardGameRepository = boardGameRepository;
+            _mapper = mapper;
         }
 
-        public async Task<List<BoardGame>> ListAsync()
+        public async Task<BoardGameListResponse> ListAsync()
         {
-            return await _boardGameRepository.ListAsync();
+            var games = await _boardGameRepository.ListAsync();
+            var gamesDto = _mapper.Map<List<BoardGameResponse>>(games);
+            return new BoardGameListResponse() { BoardGames = gamesDto };
         }
 
-        public async Task<BoardGame> CreateAsync(CreateBoardGameModel boardGameModel)
+        public async Task<BoardGameResponse> CreateAsync(CreateBoardGameRequest boardGameModel)
         {
             var title = new BoardGameTitle(boardGameModel.Title);
             var duration = new Duration(boardGameModel.DurationMinutes);
@@ -27,12 +34,22 @@ namespace BoardGameHub.Application.Services
 
             var boardGame = new BoardGame(title, duration, playerCountRange);
 
-            return await _boardGameRepository.AddAsync(boardGame);
+            var storedBoardGame = await _boardGameRepository.AddAsync(boardGame);
+            var gameDto = _mapper.Map<BoardGameResponse>(boardGame);
+            return gameDto;
         }
 
-        public async Task<BoardGame> GetAsync(int id)
+        public async Task<BoardGameResponse> GetAsync(int id)
         {
-            return await _boardGameRepository.GetAsync(id);
+            var boardGame = await _boardGameRepository.GetAsync(id);
+            if (boardGame == null) 
+            {
+                throw new GameNotFoundException($"Не найдена настольная игры с идентификатором: {id}");
+            }
+
+            var gameDto = _mapper.Map<BoardGameResponse>(boardGame);
+
+            return gameDto;
         }
     }
 }

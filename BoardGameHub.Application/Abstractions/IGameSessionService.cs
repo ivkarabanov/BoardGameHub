@@ -1,6 +1,5 @@
 ﻿using BoardGameHub.API.DTO;
 using BoardGameHub.Application.Models;
-using BoardGameHub.Application.Models.DTO;
 
 namespace BoardGameHub.Application.Abstractions
 {
@@ -8,7 +7,7 @@ namespace BoardGameHub.Application.Abstractions
     {
         Task<GameSessionListResponse> ListAsync();
 
-        Task<GameSessionResponse> CreateAsync(CreateGameSessionModel gameSessionModel);
+        Task<GameSessionResponse> CreateAsync(CreateGameSessionRequest gameSessionModel);
 
         Task<GameSessionResponse> GetAsync(int id);
     }

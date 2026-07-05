@@ -31,33 +31,29 @@ namespace BoardGameHub.API.Controllers
                 return BadRequest();
             }
 
-            var boardGame = _mapper.Map<CreateBoardGameModel>(boardGameRequest);
-            var createdGame = await _boardGameService.CreateAsync(boardGame);
+             var createdGame = await _boardGameService.CreateAsync(boardGameRequest);
             var createdGameResponse = _mapper.Map<BoardGameResponse>(createdGame);
 
             return CreatedAtAction(nameof(Get), new { id = createdGame.Id }, createdGameResponse);
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BoardGameListResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> List()
         {
             var games = await _boardGameService.ListAsync();
-            var gamesDto = _mapper.Map<List<BoardGameResponse>>(games);
-            var responseDto = new BoardGameListResponse() { BoardGames = gamesDto }    ;
-            return Ok(responseDto);
+             return Ok(games);
         }
 
 
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(BoardGameResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Get(int id)
         {
-            var game = await _boardGameService.GetAsync(id);
-            var gameDto = _mapper.Map<BoardGameResponse>(game);
+            var gameDto = await _boardGameService.GetAsync(id);
             return Ok(gameDto);
         }
     }

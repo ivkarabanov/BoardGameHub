@@ -10,7 +10,6 @@ namespace BoardGameHub.API.Mappers
         public BoardGameProfile()
         {
             CreateMap<BoardGame, BoardGameResponse>();
-            CreateMap<CreateBoardGameRequest, CreateBoardGameModel>();
         }
     }
 }

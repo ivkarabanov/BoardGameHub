@@ -1,9 +1,8 @@
 ﻿using BoardGameHub.Domain.Exceptions;
-using System.Diagnostics.CodeAnalysis;
 
 namespace BoardGameHub.Domain.ValueObjects
 {
-    public struct PlayerCountRange : IEquatable<PlayerCountRange>
+    public record PlayerCountRange
     {
         public int? Min { get; }
         public int? Max { get; }
@@ -22,23 +21,6 @@ namespace BoardGameHub.Domain.ValueObjects
             Min = min;
             Max = max;
         }
-
-        public override bool Equals([NotNullWhen(true)] object? obj)
-        {
-            if (obj is not PlayerCountRange playerCountRange)
-                return false;
-
-            return Equals(playerCountRange);
-        }
-            
-
-        public bool Equals(PlayerCountRange other)
-        {
-            return Min == other.Min && Max == other.Max;
-        }
-
-        public override int GetHashCode() =>
-            HashCode.Combine(Min, Max);
 
         public override string ToString() =>
             Min.HasValue && Max.HasValue
